@@ -16,6 +16,7 @@ export interface QueryFilterOptions {
   keyword?: string;
   currentPage?: number;
   itemsPerPage?: number;
+  tag?: string;
 }
 const token = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 
@@ -30,12 +31,14 @@ export const fetchNotes = async ({
   keyword = '',
   currentPage = 1,
   itemsPerPage = 10,
+  tag,
 }: QueryFilterOptions): Promise<NotesFetchResult> => {
   const { data } = await api.get<NotesFetchResult>('/notes', {
     params: {
       search: keyword,
       page: currentPage,
       perPage: itemsPerPage,
+      tag,
     },
   });
   return data;

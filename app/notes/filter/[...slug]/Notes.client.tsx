@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import toast, { Toaster } from 'react-hot-toast';
 
-import { fetchNotes } from '../../lib/api';
+import { fetchNotes } from '@/lib/api';
 import NoteList from '@/components/NoteList/NoteList';
 import Pagination from '@/components/Pagination/Pagination';
 import Modal from '@/components/Modal/Modal';
@@ -14,7 +14,11 @@ import SearchBox from '@/components/SearchBox/SearchBox';
 import Loader from '@/components/Loader/Loader';
 import css from './NotesPage.module.css';
 
-export default function NotesClient() {
+interface NotesClientProps {
+  initialTag?: string;
+}
+
+export default function NotesClient({ initialTag = 'all' }: NotesClientProps) {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchKeyword, setSearchKeyword] = useState<string>('');
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -27,12 +31,13 @@ export default function NotesClient() {
   }, 500);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['notes', searchKeyword, currentPage],
+    queryKey: ['notes', searchKeyword, currentPage, initialTag],
     queryFn: () =>
       fetchNotes({
         keyword: searchKeyword,
         currentPage: currentPage,
         itemsPerPage: NOTES_PER_PAGE,
+        ...(initialTag !== 'all' && { tag: initialTag }),
       }),
     placeholderData: keepPreviousData,
   });
