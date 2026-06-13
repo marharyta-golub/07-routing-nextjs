@@ -9,18 +9,19 @@ export const metadata: Metadata = {
   description: 'Simple and efficient application for managing personal notes',
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+interface RootLayoutProps {
   children: React.ReactNode;
-}>) {
+  modal: React.ReactNode;
+}
+
+export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>
         <TanStackProvider>
-          {' '}
           <Header />
           {children}
+          {modal}
           <Footer />
         </TanStackProvider>
       </body>
